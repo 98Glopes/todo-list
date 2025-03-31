@@ -1,8 +1,7 @@
 package com.gabriel.todo_list;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.gabriel.todo_list.application.CreateTodoItemUseCase;
-import com.gabriel.todo_list.infra.gateway.TodoItemGateway;
+import com.gabriel.todo_list.application.TodoItemUseCase;
+import com.gabriel.todo_list.infra.services.TodoItemService;
 import com.gabriel.todo_list.infra.repository.TodoItemRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,14 +10,14 @@ import org.springframework.context.annotation.Configuration;
 public class Config {
 
     @Bean
-    CreateTodoItemUseCase createTodoItemUseCase(TodoItemGateway todoItemGateway)
+    TodoItemUseCase createTodoItemUseCase(TodoItemService todoItemService)
     {
-        return new CreateTodoItemUseCase(todoItemGateway);
+        return new TodoItemUseCase(todoItemService);
     }
 
     @Bean
-    TodoItemGateway todoItemGateway(TodoItemRepository todoItemRepository)
+    TodoItemService todoItemGateway(TodoItemRepository todoItemRepository)
     {
-        return new TodoItemGateway(todoItemRepository);
+        return new TodoItemService(todoItemRepository);
     }
 }

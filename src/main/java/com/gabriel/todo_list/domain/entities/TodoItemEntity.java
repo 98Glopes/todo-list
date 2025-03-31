@@ -1,5 +1,8 @@
 package com.gabriel.todo_list.domain.entities;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 public class TodoItemEntity {
     private Integer id;
     private String name;
@@ -37,6 +40,10 @@ public class TodoItemEntity {
     }
 
     public void setName(String name) {
+        if (name.isBlank())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name cannot be empty");
+        }
         this.name = name;
     }
 
@@ -47,6 +54,10 @@ public class TodoItemEntity {
 
     public void setDescription(String description)
     {
+        if (description.isBlank())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description cannot be empty");
+        }
         this.description = description;
     }
 
@@ -57,5 +68,25 @@ public class TodoItemEntity {
     private void setStatus(String status)
     {
         this.status = status;
+    }
+
+    private boolean isCompleted()
+    {
+        return getStatus().equals("completed");
+    }
+    public void updateContent(String name, String description)
+    {
+        if (isCompleted())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot update completed item");
+        }
+        if (!name.isBlank())
+        {
+            setName(name);
+        }
+        if (!description.isBlank())
+        {
+            setDescription(description);
+        }
     }
 }

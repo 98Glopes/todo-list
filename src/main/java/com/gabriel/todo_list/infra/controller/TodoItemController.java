@@ -1,27 +1,33 @@
 package com.gabriel.todo_list.infra.controller;
 
-import com.gabriel.todo_list.application.CreateTodoItemUseCase;
-import com.gabriel.todo_list.application.interfaces.ICreateTodoItemUseCase;
+import com.gabriel.todo_list.application.interfaces.ITodoItemUseCase;
 import com.gabriel.todo_list.application.records.CreateTodoItemRecord;
 import com.gabriel.todo_list.application.records.TodoItemRecord;
-import com.gabriel.todo_list.infra.repository.TodoItemRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TodoItemController {
 
-    private final ICreateTodoItemUseCase createTodoItemUseCase;
+    private final ITodoItemUseCase todoItemUseCase;
 
-    public TodoItemController(ICreateTodoItemUseCase createTodoItemUseCase)
+    public TodoItemController(ITodoItemUseCase todoItemUseCase)
     {
-        this.createTodoItemUseCase = createTodoItemUseCase;
+        this.todoItemUseCase = todoItemUseCase;
     }
 
     @PostMapping("/todos")
-    public TodoItemRecord createTodoItem(@RequestBody CreateTodoItemRecord input)
+    public ResponseEntity<TodoItemRecord> createTodoItem(@RequestBody CreateTodoItemRecord input)
     {
-        return createTodoItemUseCase.execute(input);
+        var response = todoItemUseCase.createTodoItem(input);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/todos/{id}")
+    public ResponseEntity<TodoItemRecord> updateContentTodoItem(@PathVariable int id, @RequestBody CreateTodoItemRecord input)
+    {
+        var response = todoItemUseCase.updateContentTodoItem(id, input);
+
+        return ResponseEntity.ok(response);
     }
 }
