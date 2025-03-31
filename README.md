@@ -26,7 +26,7 @@ must return a json with
 }
 ```
 
-# Use Case 2:
+## Use Case 2:
 Update a To-Do Item
 
 Update an existing to-do item using the following request:
@@ -51,7 +51,7 @@ If successful, must return a json with
 
 Could'nt be possible update the status of the todo-item and coud'nt be possible update a todo-item with status "completed".
 
-# Use Case 3
+## Use Case 3
 Update To-Do Item status
 
 Implement a status life cycle for To-Do Item, considering the follow status sequence:
