@@ -1,7 +1,10 @@
 package com.gabriel.todo_list.domain.entities;
 
+import com.gabriel.todo_list.application.records.TodoItemRecord;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.HashMap;
 
 public class TodoItemEntity {
     private Integer id;
@@ -74,6 +77,7 @@ public class TodoItemEntity {
     {
         return getStatus().equals("completed");
     }
+
     public void updateContent(String name, String description)
     {
         if (isCompleted())
@@ -88,5 +92,23 @@ public class TodoItemEntity {
         {
             setDescription(description);
         }
+    }
+
+    //TODO: Create unite tests to ensure this business rule and refactor this method
+    public void updateStatus()
+    {
+        var nextStatus = new HashMap<String, String>();
+        nextStatus.put("created", "in_progress");
+        nextStatus.put("in_progress", "completed");
+        if (getStatus().equals("completed"))
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot update completed item");
+        }
+        setStatus(nextStatus.get(getStatus()));
+    }
+
+    public TodoItemRecord toRecord()
+    {
+        return new TodoItemRecord(getId(), getName(), getDescription(), getStatus());
     }
 }

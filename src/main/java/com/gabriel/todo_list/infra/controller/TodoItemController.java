@@ -27,7 +27,13 @@ public class TodoItemController {
     public ResponseEntity<TodoItemRecord> updateContentTodoItem(@PathVariable int id, @RequestBody CreateTodoItemRecord input)
     {
         var response = todoItemUseCase.updateContentTodoItem(id, input);
+        return ResponseEntity.ok(response);
+    }
 
+    @PostMapping("/todos/{id}/update-status")
+    public ResponseEntity<TodoItemRecord> updateStatus(@PathVariable int id)
+    {
+        var response = todoItemUseCase.updateStatus(id);
         return ResponseEntity.ok(response);
     }
 }

@@ -20,20 +20,22 @@ public class TodoItemUseCase implements ITodoItemUseCase {
 
         var todoItem = new TodoItemEntity(input.name(), input.description());
         var newTodoItem = todoItemService.CreateTodoItem(todoItem);
-        return new TodoItemRecord(newTodoItem.getId(), newTodoItem.getName(),
-                newTodoItem.getDescription(), newTodoItem.getStatus());
+        return newTodoItem.toRecord();
     }
 
     public TodoItemRecord updateContentTodoItem(int id, CreateTodoItemRecord input)
     {
         var todoItem = todoItemService.getTodoItemById(id);
-        if (todoItem == null)
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        todoItem.updateContent(input.name(), input.description());
-        var updatedTodoItem = todoItemService.updateContent(todoItem);
-        return new TodoItemRecord(updatedTodoItem.getId(), updatedTodoItem.getName(),
-                updatedTodoItem.getDescription(), updatedTodoItem.getStatus());
+        if (todoItem.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        todoItem.get().updateContent(input.name(), input.description());
+        return todoItemService.updateTodoItem(todoItem.get()).toRecord();
+    }
+
+    public TodoItemRecord updateStatus(int id)
+    {
+        var todoItem = todoItemService.getTodoItemById(id);
+        if (todoItem.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        todoItem.get().updateStatus();
+        return todoItemService.updateTodoItem(todoItem.get()).toRecord();
     }
 }

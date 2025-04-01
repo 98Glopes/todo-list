@@ -1,8 +1,10 @@
 package com.gabriel.todo_list.infra.services;
 
 import com.gabriel.todo_list.domain.entities.TodoItemEntity;
-import com.gabriel.todo_list.infra.model.TodoItemModel;
+import com.gabriel.todo_list.domain.mappers.TodoItemMapper;
 import com.gabriel.todo_list.infra.repository.TodoItemRepository;
+
+import java.util.Optional;
 
 
 public class TodoItemService {
@@ -16,35 +18,22 @@ public class TodoItemService {
 
     public TodoItemEntity CreateTodoItem (TodoItemEntity newTodoItem)
     {
-        var todoItem = new TodoItemModel();
-        todoItem.setName(newTodoItem.getName());
-        todoItem.setDescription(newTodoItem.getDescription());
-        todoItem.setStatus(newTodoItem.getStatus());
-
+        var todoItem = TodoItemMapper.toModel(newTodoItem);
         var createdItem = todoItemRepository.save(todoItem);
-
-        return new TodoItemEntity(createdItem.getId(), createdItem.getName(),
-                createdItem.getDescription(), createdItem.getStatus());
+        return TodoItemMapper.toEntity(createdItem);
     }
 
-    public TodoItemEntity getTodoItemById(int id)
+    public Optional<TodoItemEntity> getTodoItemById(int id)
     {
         var todoItem = todoItemRepository.findById(id);
-        return todoItem.map(todoItemModel -> new TodoItemEntity(todoItemModel.getId(), todoItemModel.getName(),
-                todoItemModel.getDescription(), todoItemModel.getStatus())).orElse(null);
+        return todoItem.map(TodoItemMapper::toEntity);
     }
 
-    public TodoItemEntity updateContent(TodoItemEntity todoItem)
+    public TodoItemEntity updateTodoItem(TodoItemEntity todoItem)
     {
-        var todoItemModel = new TodoItemModel();
-        todoItemModel.setName(todoItem.getName());
-        todoItemModel.setDescription(todoItem.getDescription());
-        todoItemModel.setStatus(todoItem.getStatus());
-        todoItemModel.setId(todoItem.getId());
-
+        var todoItemModel = TodoItemMapper.toModel(todoItem);
         var updatedItem = todoItemRepository.save(todoItemModel);
-        return new TodoItemEntity(updatedItem.getId(), updatedItem.getName(),
-                updatedItem.getDescription(), updatedItem.getStatus());
+        return TodoItemMapper.toEntity(updatedItem);
     }
 
 }
